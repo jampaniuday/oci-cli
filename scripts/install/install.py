@@ -616,6 +616,8 @@ def main():
                                               'CLI installation is done.')
     parser.add_argument('--exec-dir', help='This input parameter allows the user to specify the directory where CLI '
                                            'executable is stored.')
+    parser.add_argument('--script-dir', help='This input parameter allows the user to specify the directory where CLI '
+                                           'scripts are stored.')
     parser.add_argument('--update-path-and-enable-tab-completion', action='store_true',
                         help='If this flag is specified, the PATH environment variable is updated to include CLI '
                              'executable and tab auto completion of CLI commands is enabled. It does require rc '
@@ -638,6 +640,7 @@ def main():
     OPTIONAL_FEATURES = args.optional_features
     install_dir = args.install_dir
     exec_dir = args.exec_dir
+    script_dir = args.script_dir
 
     verify_python_version()
     if args.verify_native_dependencies:
@@ -656,7 +659,10 @@ def main():
     else:
         # Create the executable directory provided by the user if it does not exist
         create_dir(exec_dir)
-    script_dir = get_script_dir(install_dir, allow_spaces)
+    if exec_dir is None:
+        script_dir = get_script_dir(install_dir, allow_spaces)
+    else:
+        create_dir(script_dir)
     if OPTIONAL_FEATURES is None:
         OPTIONAL_FEATURES = get_optional_features()
 
